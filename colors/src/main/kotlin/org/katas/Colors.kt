@@ -16,4 +16,12 @@ class Colors {
             else -> Color(0x0000FF)
         }
     }
+    fun farthest(color: Color): Color {
+        return when {
+            (color.redComponent() < color.greenComponent()) and
+                    (color.redComponent() < color.blueComponent()) -> Color(0xFF0000)
+            color.greenComponent() < color.blueComponent() -> Color(0x00FF00)
+            else -> Color(0x0000FF)
+        }
+    }
 }
