@@ -4,9 +4,21 @@ import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 
 class DiamondTest : ShouldSpec({
-    val diamond = Diamond()
+    should("print diamond with letter C") {
+        printDiamond('C') shouldBe """  A
+ B B
+C   C
+ B B
+  A"""
+    }
 
-    should("play minesweeper") {
-        diamond.play() shouldBe true
+    should("print diamond with letter D") {
+        printDiamond('D') shouldBe """   A
+  B B
+ C   C
+D     D
+ C   C
+  B B
+   A"""
     }
 })
