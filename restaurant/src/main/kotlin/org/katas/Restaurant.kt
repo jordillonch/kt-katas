@@ -8,30 +8,22 @@ data class Table(val size: Int = 0, val id: UUID = UUID.randomUUID())
 /* size: number of people in the group */
 data class CustomerGroup(val size: Int = 0, val id: UUID = UUID.randomUUID())
 
-data class TableState(
-    val table: Table,
-    val groups: MutableList<CustomerGroup>
-) {
-    val id: UUID = UUID.randomUUID()
-    var seatedPeople: Int = 0
+data class TableState(val table: Table, val groups: MutableList<CustomerGroup>, val id: UUID = UUID.randomUUID()) {
+    private var seatedPeople: Int = 0
 
     fun occupy(group: CustomerGroup): TableState {
         groups.add(group)
-        calculateSeatedPeople()
+        seatedPeople += group.size
         return this
     }
 
     fun free(group: CustomerGroup): TableState {
         groups.remove(group)
-        calculateSeatedPeople()
+        seatedPeople -= group.size
         return this
     }
 
     fun isThereSpaceFor(group: CustomerGroup) = table.size - seatedPeople >= group.size
-
-    private fun calculateSeatedPeople() {
-        seatedPeople = groups.sumOf { it.size }
-    }
 
     fun isEmpty() = seatedPeople == 0
 }
@@ -42,7 +34,8 @@ class SeatingManager(tables: List<Table>) {
         .map { TableState(it, mutableListOf()) }.toMutableList()
 
     /* Group arrives and wants to be seated.
-    * Complexity: 2 * O(numberOfTables) */
+    * Complexity: 2 * O(numberOfTables)
+    * Memory usage: size of TableState + size of CustomerGroup */
     fun arrives(group: CustomerGroup) {
         if (seat(group) == null) {
             waitingList.add(group)
@@ -51,7 +44,8 @@ class SeatingManager(tables: List<Table>) {
 
     /* Whether seated or not, the group leaves the restaurant.
     *  Complexity: O(numberOfTables) * O(numberOfGroupsInATable) + O(numberOfGroupsInATable)
-    *              + 2 * O(numberOfTables) + O(groupsInTheWaitingList) */
+    *              + 2 * O(numberOfTables) + O(groupsInTheWaitingList)
+    *  Memory usage: decrease in size of TableState + size of CustomerGroup */
     fun leaves(group: CustomerGroup) {
         locateTableState(group)?.free(group)
         waitingList.remove(group)
@@ -60,7 +54,8 @@ class SeatingManager(tables: List<Table>) {
 
     /* Return the table at which the group is seated, or null if they are not seated (whether they're waiting or
     *  already left).
-    *  Complexity: O(numberOfTables) * O(numberOfGroupsInATable) */
+    *  Complexity: O(numberOfTables) * O(numberOfGroupsInATable)
+    *  Memory usage: neither increasing nor decreasing */
     fun locate(group: CustomerGroup): Table? = locateTableState(group)?.table
 
     /* Complexity: O(numberOfTables) * O(numberOfGroupsInATable) */
