@@ -14,10 +14,13 @@ class RestaurantTest : ShouldSpec({
     }
 
     should("locate a table of 1 if seating manager initialized with tables") {
-        val manager = SeatingManager((1..5).map { Table(it) })
+        val table1 = Table(1)
+        val table2 = Table(2)
+        val table3 = Table(3)
+        val manager = SeatingManager(listOf(table1, table2, table3))
         val group = CustomerGroup(1)
         manager.arrives(group)
-        manager.locate(CustomerGroup(1)) shouldBe Table(1)
+        manager.locate(group) shouldBe table1
         manager.leaves(group)
     }
 })
