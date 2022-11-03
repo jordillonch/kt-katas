@@ -16,6 +16,16 @@ class RestaurantTest : ShouldSpec({
     should("locate a table for 1 person") {
         val table1 = Table(1)
         val table2 = Table(2)
+        val manager = SeatingManager(listOf(table1, table2))
+        val group = CustomerGroup(1)
+        manager.arrives(group)
+        manager.locate(group) shouldBe table1
+        manager.leaves(group)
+    }
+
+    should("locate a table for 1 person and order of tables initialization does not matter") {
+        val table1 = Table(1)
+        val table2 = Table(2)
         val manager = SeatingManager(listOf(table2, table1))
         val group = CustomerGroup(1)
         manager.arrives(group)

@@ -15,15 +15,31 @@ class SeatingManager(tables: List<Table>) {
     private val tablesState: MutableList<TableState> = tables.sortedBy { it.size }
         .map { TableState(it, mutableListOf()) }.toMutableList()
 
-    /* Group arrives and wants to be seated. */
+    /*
+    * Group arrives and wants to be seated.
+    * Complexity: 3 * O(nTables). It is 3 times because in the worst case we should search for a whole free table and
+    *             if any is found, we should search for a shared table and then we should set the table as occupied.
+    *
+    *             nTables = the number of tables
+    */
     fun arrives(group: CustomerGroup) {
-        val locatedTable = seat(group)
-        if (locatedTable == null) {
+        if (seat(group) == null) {
             waitingList.add(group)
         }
     }
 
-    /* Whether seated or not, the group leaves the restaurant. */
+    /*
+    * Whether seated or not, the group leaves the restaurant.
+    * Complexity: 2 * O(nTables) * O(nGroups) + O(nWaitingList) + O(nWaitingList)
+    *
+    *             locate complexity: O(nTables) * O(nGroups)
+    *             freeTable complexity: O(nTables) * O(nGroups)
+    *             tryToLocateTableForWaitingList: O(nWaitingList) + O(nWaitingList)
+    *
+    *             nTables = the number of tables
+    *             nGroups = worst case of number of groups seated in a table
+    *             nWaitingList = the number of groups waiting to be seated
+    */
     fun leaves(group: CustomerGroup) {
         val tableToFree = locate(group)
         if (tableToFree != null) {
@@ -34,38 +50,74 @@ class SeatingManager(tables: List<Table>) {
         }
     }
 
-    /* Return the table at which the group is seated, or null if
-    they are not seated (whether they're waiting or already left). */
+    /*
+    * Return the table at which the group is seated, or null if they are not seated (whether they're waiting or
+    * already left).
+    * Complexity: O(nTables) * O(nGroups)
+    *
+    *             nTables = the number of tables
+    *             nGroups = worst case of number of groups seated in a table
+    */
     fun locate(group: CustomerGroup): Table? = tablesState.find { it.groups.contains(group) }?.table
 
+    /*
+    * Complexity: 3 * O(nTables)
+    *
+    *             locateFreeWholeTable complexity = O(nTables)
+    *             locateFreeSharedTable complexity = O(nTables)
+    *             occupyTable complexity = O(nTables)
+    *
+    *             nTables = the number of tables
+    */
     private fun seat(group: CustomerGroup): Table? {
         val freeWholeTable = locateFreeWholeTable(group)
         if (freeWholeTable != null) {
-            useTable(freeWholeTable, group)
+            occupyTable(freeWholeTable, group)
             return freeWholeTable
         } else {
             val freeSharedTable = locateFreeSharedTable(group)
             if (freeSharedTable != null) {
-                useTable(freeSharedTable, group)
+                occupyTable(freeSharedTable, group)
                 return freeSharedTable
             }
         }
         return null
     }
 
+    /*
+    * Complexity: O(nTables) * O(nGroups)
+    *
+    *             nTables = the number of tables
+    *             nGroups = worst case of number of groups seated in a table
+    */
     private fun freeTable(table: Table, group: CustomerGroup) {
         tablesState.find { it.table == table }!!.groups.remove(group)
     }
 
+    /*
+    * Complexity: O(nWaitingList) + O(nWaitingList)
+    *
+    *             nWaitingList = the number of groups waiting to be seated
+    */
     private fun tryToLocateTableForWaitingList() {
         waitingList
             .filter { seat(it) != null }
             .forEach { waitingList.remove(it) }
     }
 
+    /*
+    * Complexity: O(nTables)
+    *
+    *             nTables = the number of tables
+    */
     private fun locateFreeWholeTable(group: CustomerGroup): Table? =
         tablesState.find { it.groups.size == 0 && it.table.size >= group.size }?.table
 
+    /*
+    * Complexity: O(nTables)
+    *
+     *            nTables = the number of tables
+    */
     private fun locateFreeSharedTable(group: CustomerGroup): Table? {
         tablesState
             .filter { it.groups.size > 0 && it.table.size >= group.size }
@@ -78,7 +130,12 @@ class SeatingManager(tables: List<Table>) {
         return null
     }
 
-    private fun useTable(table: Table, group: CustomerGroup) {
+    /*
+    * Complexity: O(nTables)
+    *
+    *             nTables = the number of tables
+    */
+    private fun occupyTable(table: Table, group: CustomerGroup) {
         tablesState.find { it.table == table }!!.groups.add(group)
     }
 }
