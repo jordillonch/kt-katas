@@ -32,6 +32,8 @@ data class TableState(
     private fun calculateSeatedPeople() {
         seatedPeople = groups.sumOf { it.size }
     }
+
+    fun isEmpty() = seatedPeople == 0
 }
 
 class SeatingManager(tables: List<Table>) {
@@ -80,9 +82,9 @@ class SeatingManager(tables: List<Table>) {
 
     /* Complexity: O(numberOfTables) */
     private fun locateFreeWholeTable(group: CustomerGroup): TableState? =
-        tablesState.find { it.groups.size == 0 && it.table.size >= group.size }
+        tablesState.find { it.isEmpty() && it.isThereSpaceFor(group) }
 
     /* Complexity: O(numberOfTables) */
     private fun locateFreeSharedTable(group: CustomerGroup): TableState? =
-        tablesState.firstOrNull { it.isThereSpaceFor(group) }
+        tablesState.find { it.isThereSpaceFor(group) }
 }
