@@ -10,9 +10,10 @@ data class CustomerGroup(val size: Int = 0, val id: UUID = UUID.randomUUID())
 
 data class TableState(val table: Table, val groups: MutableList<CustomerGroup>, val id: UUID = UUID.randomUUID())
 
-class SeatingManager(private val tables: List<Table>) {
+class SeatingManager(tables: List<Table>) {
     private val waitingList: MutableList<CustomerGroup> = mutableListOf()
-    private val tablesState: MutableList<TableState> = tables.map { TableState(it, mutableListOf()) }.toMutableList()
+    private val tablesState: MutableList<TableState> = tables.sortedBy { it.size }
+        .map { TableState(it, mutableListOf()) }.toMutableList()
 
     /* Group arrives and wants to be seated. */
     fun arrives(group: CustomerGroup) {
@@ -40,12 +41,12 @@ class SeatingManager(private val tables: List<Table>) {
     private fun seat(group: CustomerGroup): Table? {
         val freeWholeTable = locateFreeWholeTable(group)
         if (freeWholeTable != null) {
-            tableInUse(freeWholeTable, group)
+            useTable(freeWholeTable, group)
             return freeWholeTable
         } else {
             val freeSharedTable = locateFreeSharedTable(group)
             if (freeSharedTable != null) {
-                tableInUse(freeSharedTable, group)
+                useTable(freeSharedTable, group)
                 return freeSharedTable
             }
         }
@@ -57,20 +58,18 @@ class SeatingManager(private val tables: List<Table>) {
     }
 
     private fun tryToLocateTableForWaitingList() {
-        waitingList.forEach { group ->
-            val locatedTable = seat(group)
-            if (locatedTable != null) {
-                waitingList.remove(group)
-            }
-        }
+        waitingList
+            .filter { seat(it) != null }
+            .forEach { waitingList.remove(it) }
     }
 
     private fun locateFreeWholeTable(group: CustomerGroup): Table? =
         tablesState.find { it.groups.size == 0 && it.table.size >= group.size }?.table
 
     private fun locateFreeSharedTable(group: CustomerGroup): Table? {
-        tablesState.find { it.groups.size > 0 && it.table.size >= group.size }
-            ?.let { tableState ->
+        tablesState
+            .filter { it.groups.size > 0 && it.table.size >= group.size }
+            .forEach { tableState ->
                 val freeSeats = tableState.table.size - tableState.groups.sumOf { it.size }
                 if (freeSeats >= group.size) {
                     return tableState.table
@@ -79,7 +78,7 @@ class SeatingManager(private val tables: List<Table>) {
         return null
     }
 
-    private fun tableInUse(table: Table, group: CustomerGroup) {
+    private fun useTable(table: Table, group: CustomerGroup) {
         tablesState.find { it.table == table }!!.groups.add(group)
     }
 }
