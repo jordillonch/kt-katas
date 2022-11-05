@@ -1,42 +1,33 @@
 package org.katas
 
-fun romanNumerals(number: Int): String {
-    val romanUnits = mapOf(
-        1000 to "M",
-        500 to "D",
-        100 to "C",
-        50 to "L",
-        10 to "X",
-        5 to "V",
-        1 to "I"
-    )
-    return romanUnits.entries
-        .fold(RomanNumeralsIterator(number, "")) { (rest, result), (romanNumeralInt, romanNumeral) ->
-            calculateRomanNumeralsUntil3Digits(rest, romanNumeralInt, romanNumeral).let { (rest, romanResult) ->
-                calculateRomanNumeralsWhenSubtractingOne(romanResult, rest, romanNumeralInt, romanNumeral)
-            }.let { (rest, romanResult) -> RomanNumeralsIterator(rest, result + romanResult) }
-        }.result
-}
+private data class RomanNumeral(val number: Int, val numeral: String)
+
+fun romanNumerals(number: Int) =
+    listOf(
+        RomanNumeral(1000, "M"),
+        RomanNumeral(500, "D"),
+        RomanNumeral(100, "C"),
+        RomanNumeral(50, "L"),
+        RomanNumeral(10, "X"),
+        RomanNumeral(5, "V"),
+        RomanNumeral(1, "I")
+    ).fold(RomanNumeralsIterator(number, "")) { (rest, result), romanNumeral ->
+        calculateRomanNumeralsUntil3Digits(rest, romanNumeral).let { (rest, romanResult) ->
+            calculateRomanNumeralsWhenSubtractingOne(romanResult, rest, romanNumeral)
+        }.let { (rest, romanResult) -> RomanNumeralsIterator(rest, result + romanResult) }
+    }.result
 
 private data class RomanNumeralsIterator(val rest: Int, val result: String)
 
-private fun calculateRomanNumeralsUntil3Digits(
-    number: Int,
-    romanNumeralInt: Int,
-    romanNumeral: String
-): RomanNumeralsIterator {
-    val timesOfRomanUnits = number / romanNumeralInt
-    return RomanNumeralsIterator(number - romanNumeralInt * timesOfRomanUnits, romanNumeral.repeat(timesOfRomanUnits))
-}
+private fun calculateRomanNumeralsUntil3Digits(number: Int, romanNumeral: RomanNumeral) =
+    RomanNumeralsIterator(
+        number - romanNumeral.number * (number / romanNumeral.number),
+        romanNumeral.numeral.repeat(number / romanNumeral.number)
+    )
 
-private fun calculateRomanNumeralsWhenSubtractingOne(
-    result: String,
-    rest: Int,
-    romanNumeralInt: Int,
-    romanNumeral: String
-) =
-    if (rest != 0 && romanNumeralInt - 1 == rest) {
-        RomanNumeralsIterator(rest - romanNumeralInt + 1, result + "I" + romanNumeral)
+private fun calculateRomanNumeralsWhenSubtractingOne(result: String, rest: Int, romanNumeral: RomanNumeral) =
+    if (rest != 0 && romanNumeral.number - 1 == rest) {
+        RomanNumeralsIterator(rest - romanNumeral.number + 1, result + "I" + romanNumeral.numeral)
     } else {
         RomanNumeralsIterator(rest, result)
     }
