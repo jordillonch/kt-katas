@@ -5,4 +5,5 @@ include("minesweeper")
 include("diamond")
 include("roman_numerals")
 include("restaurant")
+include("mastermind")
 
