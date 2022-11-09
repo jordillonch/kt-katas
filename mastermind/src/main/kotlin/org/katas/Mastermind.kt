@@ -6,10 +6,10 @@ class Mastermind(private val secret: List<String>) {
     }
 
     private fun countWellPlaced(guess: List<String>): Int {
-        return secret.zip(guess).filter { (secretItem, guessItem) -> secretItem == guessItem }.size
+        return secret.zip(guess).count { (secretItem, guessItem) -> secretItem == guessItem }
     }
 
     private fun countMisplaced(guess: List<String>): Int {
-        return secret.zip(guess).filter { (secretItem, guessItem) -> secretItem != guessItem && guessItem in secret }.size
+        return secret.zip(guess).count { (secretItem, guessItem) -> secretItem != guessItem && guessItem in secret }
     }
 }
