@@ -20,8 +20,16 @@ class MastermindTest : ShouldSpec({
         val mastermind = Mastermind(listOf("blue", "red", "green", "pink"))
         mastermind.evaluate(listOf("yellow", "red", "blue", "purple")) shouldBe Pair(1, 1)
     }
-    should("find 1 well placed and 1 misplaced for 4 colors secret2") {
+    should("find 1 well placed and 2 misplaced for 4 colors secret") {
         val mastermind = Mastermind(listOf("blue", "green", "blue", "green"))
         mastermind.evaluate(listOf("green", "green", "red", "blue")) shouldBe Pair(1, 2)
+    }
+    should("find 0 well placed and 0 misplaced for 4 colors secret") {
+        val mastermind = Mastermind(listOf("yellow", "blue", "yellow", "blue", "yellow"))
+        mastermind.evaluate(listOf("blue", "yellow", "red", "yellow", "blue")) shouldBe Pair(0, 4)
+    }
+    should("find 1 well placed and 3 misplaced for 5 colors secret") {
+        val mastermind = Mastermind(listOf("yellow", "blue", "red", "blue", "red"))
+        mastermind.evaluate(        listOf("blue", "yellow", "red", "yellow", "blue")) shouldBe Pair(1, 3)
     }
 })
