@@ -6,3 +6,5 @@
 ## Kata 4: [Restaurant](restaurant/README.md)
 ## Kata 5: [Roman numerals](roman_numerals/README.md)
 ## Kata 6: [Mastermind](mastermind/README.md)
+## Kata 7: [Bowling score](bowling_score/README.md)
+## Kata 8: [Sum pairs](sum_pairs/README.md)
