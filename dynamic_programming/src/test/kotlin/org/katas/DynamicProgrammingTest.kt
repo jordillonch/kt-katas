@@ -43,4 +43,10 @@ class DynamicProgrammingTest : StringSpec({
         ways(3) shouldBe 3
         ways(4) shouldBe 5
     }
+
+    "minimum of edits" {
+        minimumOfEdits("geek", "gesek") shouldBe 1
+        minimumOfEdits("cat", "cut") shouldBe 1
+        minimumOfEdits("sunday", "saturday") shouldBe 3
+    }
 })

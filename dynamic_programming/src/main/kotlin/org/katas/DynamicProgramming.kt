@@ -214,3 +214,67 @@ ways(4) = fibonacci(5) = 5
 fun ways(stairsToClimb: Int): Int {
     return fibonacci(stairsToClimb + 1)
 }
+
+
+/**
+Given two strings str1 and str2 and below operations that can be performed on str1. Find minimum number of edits
+(operations) required to convert ‘str1’ into ‘str2’.
+
+Insert
+Remove
+Replace
+All of the above operations are of equal cost.
+
+Examples:
+
+Input:   str1 = “geek”, str2 = “gesek”
+Output:  1
+Explanation: We can convert str1 into str2 by inserting a ‘s’.
+
+Input:   str1 = “cat”, str2 = “cut”
+Output:  1
+Explanation: We can convert str1 into str2 by replacing ‘a’ with ‘u’.
+
+Input:   str1 = “sunday”, str2 = “saturday”
+Output:  3
+Explanation: Last three and first characters are same.  We basically need to convert “un” to “atur”.  This can be done
+using below three operations. Replace ‘n’ with ‘r’, insert t, insert a
+ */
+fun minimumOfEdits(string1: String, string2: String): Int {
+    return editDist(string1, string2, string1.length, string2.length)
+}
+
+// A Naive recursive Java program to find minimum number
+// operations to convert str1 to str2
+fun min(x: Int, y: Int, z: Int): Int {
+    if (x <= y && x <= z) return x
+    return if (y <= x && y <= z) y else z
+}
+
+fun editDist(str1: String, str2: String, m: Int, n: Int): Int {
+    // If first string is empty, the only option is to
+    // insert all characters of second string into first
+    if (m == 0) return n
+
+    // If second string is empty, the only option is to
+    // remove all characters of first string
+    if (n == 0) return m
+
+    // If last characters of two strings are same,
+    // nothing much to do. Ignore last characters and
+    // get count for remaining strings.
+    return if (str1[m - 1] == str2[n - 1]) {
+        editDist(str1, str2, m - 1, n - 1)
+    } else {
+        // If last characters are not same, consider all
+        // three operations on last character of first
+        // string, recursively compute minimum cost for all
+        // three operations and take minimum of three
+        // values.
+        (1 + min(
+            editDist(str1, str2, m, n - 1),  // Insert
+            editDist(str1, str2, m - 1, n),  // Remove
+            editDist(str1, str2, m - 1, n - 1) // Replace
+        ))
+    }
+}
