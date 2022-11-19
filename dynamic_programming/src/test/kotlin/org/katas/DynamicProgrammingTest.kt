@@ -1,6 +1,5 @@
 package org.katas
 
-import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
@@ -12,9 +11,29 @@ class DynamicProgrammingTest : StringSpec({
         subarraySum(listOf(1, 2, 3, 4), 10) shouldBe false
     }
 
+    "knapsack" {
+        val profits = intArrayOf(1, 6, 10, 16)
+        val weights = intArrayOf(1, 2, 3, 5)
+        solveKnapsack(profits, weights, 7) shouldBe 22
+        solveKnapsack(profits, weights, 6) shouldBe 17
+    }
+
     "equalSubsetSumPartition" {
-        equalSubsetSumPartition(listOf(1, 2, 3, 4)) shouldBe true
-        equalSubsetSumPartition(listOf(1, 1, 3, 4, 7)) shouldBe true
-        equalSubsetSumPartition(listOf(2, 3, 4, 6)) shouldBe false
+        canPartition(intArrayOf(1, 2, 3, 4)) shouldBe true
+        canPartition(intArrayOf(1, 1, 3, 4, 7)) shouldBe true
+        canPartition(intArrayOf(2, 3, 4, 6)) shouldBe false
+    }
+
+    "make change" {
+        makeChange(18) shouldBe listOf(5, 5, 5, 2, 1)
+        makeChange(19) shouldBe listOf(5, 5, 5, 2, 2)
+    }
+
+    "fibonacci" {
+        fibonacciSerie(1) shouldBe listOf(0)
+        fibonacciSerie(2) shouldBe listOf(0, 1)
+        fibonacciSerie(3) shouldBe listOf(0, 1, 1)
+        fibonacciSerie(4) shouldBe listOf(0, 1, 1, 2)
+        fibonacciSerie(5) shouldBe listOf(0, 1, 1, 2, 3)
     }
 })
