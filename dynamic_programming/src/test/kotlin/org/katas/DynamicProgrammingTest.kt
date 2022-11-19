@@ -36,4 +36,11 @@ class DynamicProgrammingTest : StringSpec({
         fibonacciSerie(4) shouldBe listOf(0, 1, 1, 2)
         fibonacciSerie(5) shouldBe listOf(0, 1, 1, 2, 3)
     }
+
+    "stairs to climb" {
+        ways(1) shouldBe 1
+        ways(2) shouldBe 2
+        ways(3) shouldBe 3
+        ways(4) shouldBe 5
+    }
 })

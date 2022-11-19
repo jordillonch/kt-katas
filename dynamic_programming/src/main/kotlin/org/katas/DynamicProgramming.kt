@@ -1,6 +1,5 @@
 package org.katas
 
-import java.util.LinkedList
 import kotlin.math.max
 
 /**
@@ -186,4 +185,32 @@ fun fibonacci(index: Int): Int {
         }
     }
     return fibonacciMemoize[index]!!
+}
+
+
+/**
+In this problem, you are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or
+2 steps. The question is, in how many distinct ways can you climb to the top?
+
+Input: n = 1
+Output: 1
+There is only one way to climb 1 stair
+
+Input: n = 2
+Output: 2
+There are two ways: (1, 1) and (2)
+
+Input: n = 4
+Output: 5
+(1, 1, 1, 1), (1, 1, 2), (2, 1, 1), (1, 2, 1), (2, 2)
+
+The above expression is actually the expression for Fibonacci numbers, but there is one thing to notice, the value of ways(n) is equal to fibonacci(n+1).
+
+ways(1) = fibonacci(2) = 1
+ways(2) = fibonacci(3) = 2
+ways(3) = fibonacci(4) = 3
+ways(4) = fibonacci(5) = 5
+ */
+fun ways(stairsToClimb: Int): Int {
+    return fibonacci(stairsToClimb + 1)
 }
