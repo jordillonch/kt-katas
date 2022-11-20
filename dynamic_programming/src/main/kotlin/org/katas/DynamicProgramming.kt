@@ -200,11 +200,20 @@ Input: n = 2
 Output: 2
 There are two ways: (1, 1) and (2)
 
+Input: n = 3
+Output: 3
+(1, 1, 1), (1, 2), (2, 1)
+
 Input: n = 4
 Output: 5
 (1, 1, 1, 1), (1, 1, 2), (2, 1, 1), (1, 2, 1), (2, 2)
 
-The above expression is actually the expression for Fibonacci numbers, but there is one thing to notice, the value of ways(n) is equal to fibonacci(n+1).
+Input: n = 5
+Output: 8
+(1, 1, 1, 1, 1), (2, 1, 1, 1), (1, 2, 1, 1), (1, 1, 2, 1), (1, 1, 1, 2), (1, 2, 2), (2, 1, 2), (2, 2, 1)
+
+The above expression is actually the expression for Fibonacci numbers, but there is one thing to notice, the value of
+ways(n) is equal to fibonacci(n+1).
 
 ways(1) = fibonacci(2) = 1
 ways(2) = fibonacci(3) = 2
