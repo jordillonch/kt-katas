@@ -8,3 +8,5 @@
 ## Kata 6: [Mastermind](mastermind/README.md)
 ## Kata 7: [Bowling score](bowling_score/README.md)
 ## Kata 8: [Sum pairs](sum_pairs/README.md)
+## [Dynamic programming problems](dynamic_programming/README.md)
+## [Data structures](data_structures/README.md)
