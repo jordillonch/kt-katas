@@ -8,7 +8,7 @@ class Stack<T> {
     }
 
     fun pop(): T {
-        return data.get(0)
+        return data.removeAt(0)
     }
 }
 
