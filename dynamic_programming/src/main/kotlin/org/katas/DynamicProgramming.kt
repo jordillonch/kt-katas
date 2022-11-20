@@ -250,40 +250,33 @@ Explanation: Last three and first characters are same.  We basically need to con
 using below three operations. Replace ‘n’ with ‘r’, insert t, insert a
  */
 fun minimumOfEdits(string1: String, string2: String): Int {
-    return editDist(string1, string2, string1.length, string2.length)
+    return minimumOfEditsRecursive(string1, string2, string1.length, string2.length)
 }
 
-// A Naive recursive Java program to find minimum number
-// operations to convert str1 to str2
-fun min(x: Int, y: Int, z: Int): Int {
-    if (x <= y && x <= z) return x
-    return if (y <= x && y <= z) y else z
-}
+fun minimumOfEditsRecursive(string1: String, string2: String, len1: Int, len2: Int): Int {
+    // If first string is empty, the only option is to insert all characters of second string into first
+    if (len1 == 0) return len2
+    // If second string is empty, the only option is to remove all characters of first string
+    if (len2 == 0) return len1
 
-fun editDist(str1: String, str2: String, m: Int, n: Int): Int {
-    // If first string is empty, the only option is to
-    // insert all characters of second string into first
-    if (m == 0) return n
-
-    // If second string is empty, the only option is to
-    // remove all characters of first string
-    if (n == 0) return m
-
-    // If last characters of two strings are same,
-    // nothing much to do. Ignore last characters and
-    // get count for remaining strings.
-    return if (str1[m - 1] == str2[n - 1]) {
-        editDist(str1, str2, m - 1, n - 1)
-    } else {
-        // If last characters are not same, consider all
-        // three operations on last character of first
-        // string, recursively compute minimum cost for all
-        // three operations and take minimum of three
-        // values.
-        (1 + min(
-            editDist(str1, str2, m, n - 1),  // Insert
-            editDist(str1, str2, m - 1, n),  // Remove
-            editDist(str1, str2, m - 1, n - 1) // Replace
-        ))
+    // If last characters of two strings are same, nothing much to do. Ignore last characters and get count for
+    // remaining strings.
+    if (string1[len1 - 1] == string2[len2 - 1]) {
+        return minimumOfEditsRecursive(string1, string2, len1 - 1, len2 - 1)
     }
+
+    // If last characters are not same, consider all three operations on last character of first string, recursively
+    // compute minimum cost for all three operations and take minimum of three values.
+    return 1 + listOf(
+        minimumOfEditsRecursive(string1, string2, len1, len2 - 1), // insert
+        minimumOfEditsRecursive(string1, string2, len1 - 1, len2), // delete
+        minimumOfEditsRecursive(string1, string2, len1 - 1, len2 - 1), // replace
+    ).min()
 }
+// gee
+// ges
+// len1 len2 operation str1
+// 3    3
+// 3    3-1  insert  = gees
+// 3-1  3    delete  = ge
+// 3-1  3-1  replace = ges
