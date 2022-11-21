@@ -52,4 +52,10 @@ class DynamicProgrammingTest : StringSpec({
         minimumOfEdits("cat", "cut") shouldBe 1
         minimumOfEdits("sunday", "saturday") shouldBe 3
     }
+
+    "largest sum contiguous subarray" {
+        largestSumContigousSubarray(intArrayOf(-2, -3, 4, -1, -2, 1, 5, -3)) shouldBe 7
+        largestSumContigousSubarray(intArrayOf(10, -1, 9, -1)) shouldBe 18
+        largestSumContigousSubarray(intArrayOf(4, -1, 2)) shouldBe 5
+    }
 })

@@ -19,7 +19,7 @@ fun subarraySum(input: List<Int>, k: Int): Boolean {
     return subarraySumRecursive(input, k, 0, 0)
 }
 
-fun subarraySumRecursive(input: List<Int>, k: Int, currentIndex: Int, selectedItems: Int ): Boolean {
+fun subarraySumRecursive(input: List<Int>, k: Int, currentIndex: Int, selectedItems: Int): Boolean {
     if (k == 0 && selectedItems >= 2) return true
     if (currentIndex == input.size) return false
 //    println("item: ${input[currentIndex]}, currentIndex: $currentIndex, k: $k, selectedItems: $selectedItems")
@@ -27,7 +27,8 @@ fun subarraySumRecursive(input: List<Int>, k: Int, currentIndex: Int, selectedIt
     // select current element
     var sumSelectingCurrentElement = false
     if (input[currentIndex] <= k) {
-        sumSelectingCurrentElement = subarraySumRecursive(input, k - input[currentIndex], currentIndex + 1, selectedItems + 1)
+        sumSelectingCurrentElement =
+            subarraySumRecursive(input, k - input[currentIndex], currentIndex + 1, selectedItems + 1)
     }
     // skip current element
     val sumSkippingCurrentElement = subarraySumRecursive(input, k, currentIndex + 1, selectedItems)
@@ -300,3 +301,24 @@ fun minimumOfEditsRecursive(string1: String, string2: String, len1: Int, len2: I
 // 3    3-1  insert  = gees
 // 3-1  3    delete  = ge
 // 3-1  3-1  replace = ges
+
+
+/**
+Largest Sum Contiguous Subarray
+Given an array arr[] of size N. The task is to find the sum of the contiguous subarray within a arr[] with the largest sum.
+
+The idea of Kadane’s algorithm is to maintain a variable max_ending_here that stores the maximum sum contiguous
+subarray ending at current index and a variable max_so_far stores the maximum sum of contiguous subarray found so far,
+Everytime there is a positive-sum value in max_ending_here compare it with max_so_far and update max_so_far if it is
+greater than max_so_far.
+ */
+fun largestSumContigousSubarray(a: IntArray): Int {
+    var maxEndingHere = 0
+    var maxSoFar = Int.MIN_VALUE
+    for (item in a) {
+        maxEndingHere += item
+        if (maxEndingHere > maxSoFar) maxSoFar = maxEndingHere
+        if (maxEndingHere < 0) maxEndingHere = 0
+    }
+    return maxSoFar
+}
