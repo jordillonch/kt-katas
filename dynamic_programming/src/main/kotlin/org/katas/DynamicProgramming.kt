@@ -15,10 +15,30 @@ Input: [23, 2, 4, 6, 7], k=6
 Output: True
 Explanation: Because [2, 4] is a continuous subarray of size 2 and sums up to 6.
  */
-fun subarraySum(input: List<Int>, k: Int): Boolean =
-    input.zipWithNext()
-        .firstOrNull { it.first + it.second == k }
-        .let { it != null }
+fun subarraySum(input: List<Int>, k: Int): Boolean {
+    return subarraySumRecursive(input, k, 0, 0)
+}
+
+fun subarraySumRecursive(input: List<Int>, k: Int, currentIndex: Int, selectedItems: Int ): Boolean {
+    if (k == 0 && selectedItems >= 2) return true
+    if (currentIndex == input.size) return false
+//    println("item: ${input[currentIndex]}, currentIndex: $currentIndex, k: $k, selectedItems: $selectedItems")
+
+    // select current element
+    var sumSelectingCurrentElement = false
+    if (input[currentIndex] <= k) {
+        sumSelectingCurrentElement = subarraySumRecursive(input, k - input[currentIndex], currentIndex + 1, selectedItems + 1)
+    }
+    // skip current element
+    val sumSkippingCurrentElement = subarraySumRecursive(input, k, currentIndex + 1, selectedItems)
+
+    println("sumSelectingCurrentElement: $sumSelectingCurrentElement, sumSkippingCurrentElement: $sumSkippingCurrentElement")
+    return sumSelectingCurrentElement || sumSkippingCurrentElement
+}
+//fun subarraySum(input: List<Int>, k: Int): Boolean =
+//    input.zipWithNext()
+//        .firstOrNull { it.first + it.second == k }
+//        .let { it != null }
 //fun subarraySum(input: List<Int>, k: Int): Boolean {
 //    for (i in input.indices) {
 //        if (i < input.size - 1 && input[i] + input[i+1] == k) {
